@@ -33,7 +33,7 @@ Works with Claude, ChatGPT and Cursor. **[Get access →](https://trackiq.com/mc
 
 ![A TrackIQ: Amazon Sponsored Ads Structure Audit report](.github/page/hero.png)
 
-Audits how an Amazon Sponsored Ads account is built rather than how it performed last week — ad groups crowded with unrelated products, the same product advertised in a dozen ad groups competing with itself, keywords stacked in every match type inside one ad group, spend sitting outside any portfolio, and selling products with no ad at all — ranked by the spend each problem touches, with a fix order the team can work through. Use when the user asks for an account structure audit, campaign structure review, PPC account audit, restructure plan, account cleanup, portfolio setup, ad group hygiene, cannibalization between ad groups, or which products are not advertised.
+Audits how an Amazon Sponsored Ads account is built rather than how it performed last week — ad groups crowded with unrelated products, the same product bid twice on one search from different ad groups, keywords stacked in every match type inside one ad group, spend sitting outside any portfolio, and selling products with no ad at all — ranked by the spend each problem touches, with a fix order the team can work through. Use when the user asks for an account structure audit, campaign structure review, PPC account audit, restructure plan, account cleanup, portfolio setup, ad group hygiene, cannibalization between ad groups, or which products are not advertised.
 
 ### The rules that keep it honest
 

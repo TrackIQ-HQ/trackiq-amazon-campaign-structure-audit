@@ -10,8 +10,9 @@
 
 ## 2. Is every finding real?
 
-- **No paused or archived entity appears in a finding.** Spot-check three.
-- Every crowded ad group and every multi-ad-group ASIN names its ad groups.
+- **No paused or archived entity appears in a finding**, and no enabled ad
+  or keyword whose campaign is paused. Spot-check three.
+- Every crowded ad group and every overlapping keyword names its ad groups.
 - Every unadvertised product has revenue in the window and has been checked
   against stock.
 - The match-type stacking section says negatives are not visible.

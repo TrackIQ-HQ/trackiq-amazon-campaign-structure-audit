@@ -24,8 +24,15 @@ weighted by spend, and 30 days is the widest window the daily tools keep.
 ## 2. State is the first trap
 
 Every Sponsored Ads tool **defaults to `state='enabled'`**. Pull `'all'` so
-the account totals reconcile to the console, then filter to `enabled`
-before any check runs. Say in the report which states were counted.
+the account totals reconcile to the console, then filter to **live**
+entities before any check runs. Say in the report which states were counted.
+
+A product ad or keyword is **live** only when it, its ad group and its
+campaign are all enabled. The entity's own `state` is not enough: an enabled
+ad inside a paused campaign reads `enabled` and serves nothing, and on a
+mature account a third of enabled ads can sit in paused campaigns. Map each
+row to its campaign through `ad_group_id` (pull 3) and check the campaign's
+`state` (pull 1).
 
 `'all'` on `ad_type` blends attribution windows (SP 7 days, SB and SD 14).
 That is fine for weighting findings by spend — spend has no window — but do
@@ -35,6 +42,7 @@ not quote a blended ROAS as if it were one channel's.
 
 `get_product_ads` and `get_targets` return exactly `limit` rows on any real
 account. Page with `offset` until a call returns fewer rows than the limit.
+Do not stop on `next_cursor`: it can be `null` on a full page.
 If you stop early, say so and call every count a floor.
 
 ## 4. What the data will not tell you
@@ -45,8 +53,9 @@ If you stop early, say so and call every count a floor.
   term. Say so on that finding.
 - **No budgets or budget caps.** Capping-out is a pacing question; send the
   user to `trackiq-amazon-budget-pacing` for it.
-- **No campaign-to-portfolio mapping on every row.** Portfolio coverage is
-  computed from totals — see `method.md`.
+- **Product and auto targets often carry no text.** `targeting_text` comes
+  back null on many `record_type='TARGET'` rows, so overlap between product
+  or auto targets cannot be checked. Say so.
 
 ## 5. The ID rule
 

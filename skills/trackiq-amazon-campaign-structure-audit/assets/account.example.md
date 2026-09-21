@@ -61,7 +61,6 @@ Thresholds for `trackiq-amazon-campaign-structure-audit`. Defaults suit most bra
 | Field | Value |
 |---|---|
 | Max products per ad group | 5 |
-| Max ad groups per product | 6 |
 | Min orders to name a keeper | 10 |
 | Max spend outside portfolios | 10% |
 | Min revenue to flag an unadvertised product | $500 |

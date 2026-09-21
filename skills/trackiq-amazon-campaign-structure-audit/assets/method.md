@@ -8,7 +8,7 @@ brackets.
 
 ## 1. Crowded ad groups
 
-Distinct ASINs per **enabled** SP ad group, from `get_product_ads`.
+Distinct ASINs per **live** SP ad group, from `get_product_ads`.
 
 - Flag ad groups advertising more than **[5]** distinct ASINs.
 - Spend touched: the ad group's spend.
@@ -16,21 +16,31 @@ Distinct ASINs per **enabled** SP ad group, from `get_product_ads`.
   product in it. A $12 accessory and a $160 hero share one bid.
 - Fix: split by price band or product line so bids can differ.
 
-## 2. The same product everywhere
+## 2. The same product bid twice on one search
 
-Enabled SP ad groups per ASIN, from `get_product_ads`.
+Live SP product ads (pull 4) joined to live keywords (pull 5) on
+`ad_group_id`.
 
-- Flag ASINs advertised in more than **[6]** enabled ad groups.
-- Spend touched: the sum of that ASIN's product-ad spend.
-- Why it matters: the ad groups bid against one another for the same
-  shopper, and the report cannot say which one earned the sale.
-- Fix: keep one ad group per intent (brand, generic, competitor, auto) and
-  pause the rest. Name the one to keep — the highest ROAS with at least
-  **[10]** orders.
+- Flag a keyword — same normalised text, same match type — that is bid in
+  **two or more live ad groups advertising the same ASIN**. Those copies
+  enter the same auction for the same shopper and bid against each other,
+  and the report cannot say which one earned the sale.
+- **An ASIN in many ad groups is not a finding on its own.** Accounts split
+  by intent — a campaign per match type, keyword theme, auto targeting
+  group, brand or generic — put a hero product in twenty or more ad groups
+  on purpose. Show the count for context; flag only the overlap.
+- Spend touched: the spend of the overlapping keyword copies, each keyword
+  counted once even when its ad group holds several flagged ASINs.
+- Report one row per keyword and match type, listing its ad groups and
+  products.
+- Fix: keep the copy in the ad group built for that intent — a
+  single-keyword or exact campaign over a multi-keyword catch-all — or, if
+  none is, the one with the highest ROAS on at least **[10]** orders. Negate
+  or pause the others. Negatives are not visible to this skill; say so.
 
 ## 3. Match-type stacking
 
-Keywords from `get_targets` (`record_type='KEYWORD'`), enabled only. Group by
+Keywords from `get_targets` (`record_type='KEYWORD'`), live only. Group by
 `ad_group_id` and normalised keyword text.
 
 - Flag any keyword present in two or more match types **inside one ad group**.
@@ -40,15 +50,21 @@ Keywords from `get_targets` (`record_type='KEYWORD'`), enabled only. Group by
 - Fix: move the exact copy to its own exact ad group and negate it in the
   broad one. Say that negatives are not visible to this skill.
 
-The same keyword in *different* ad groups is a wasted-spend finding, not a
-structure one — leave it to `trackiq-amazon-wasted-spend`.
+The same keyword in *different* ad groups for the same product is check 2.
+The same keyword across unrelated products is a wasted-spend question — leave
+it to `trackiq-amazon-wasted-spend`.
 
 ## 4. Spend outside any portfolio
 
+Every `get_campaigns` row carries `portfolio_id`; it is null when the
+campaign sits outside any portfolio.
+
 ```
-outside = total campaign spend (pull 1, enabled) - sum of portfolio spend (pull 2, enabled)
-share   = outside / total campaign spend
+outside = spend of enabled campaigns whose portfolio_id is null
+share   = outside / spend of all enabled campaigns
 ```
+
+Use `get_portfolios` for portfolio names only.
 
 - Flag when `share` exceeds **[10%]**.
 - Spend touched: `outside`.
@@ -57,8 +73,9 @@ share   = outside / total campaign spend
 
 ## 5. Selling products with no ad
 
-ASINs with ordered revenue in `get_product_performance` and no **enabled**
-SP or SD product ad in `get_product_ads`. Join on uppercase ASIN.
+ASINs with ordered revenue in `get_product_performance` and no **live**
+SP or SD product ad in `get_product_ads`. An ASIN whose only enabled ads sit
+in paused campaigns is unadvertised. Join on uppercase ASIN.
 
 - Flag when the ASIN's revenue in the window exceeds **[$500]**.
 - Spend touched: none — rank these by revenue instead, in their own table.

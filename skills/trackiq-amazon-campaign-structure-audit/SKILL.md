@@ -1,6 +1,6 @@
 ---
 name: trackiq-amazon-campaign-structure-audit
-description: Audits how an Amazon Sponsored Ads account is built rather than how it performed last week — ad groups crowded with unrelated products, the same product advertised in a dozen ad groups competing with itself, keywords stacked in every match type inside one ad group, spend sitting outside any portfolio, and selling products with no ad at all — ranked by the spend each problem touches, with a fix order the team can work through. Use when the user asks for an account structure audit, campaign structure review, PPC account audit, restructure plan, account cleanup, portfolio setup, ad group hygiene, cannibalization between ad groups, or which products are not advertised.
+description: Audits how an Amazon Sponsored Ads account is built rather than how it performed last week — ad groups crowded with unrelated products, the same product bid twice on one search from different ad groups, keywords stacked in every match type inside one ad group, spend sitting outside any portfolio, and selling products with no ad at all — ranked by the spend each problem touches, with a fix order the team can work through. Use when the user asks for an account structure audit, campaign structure review, PPC account audit, restructure plan, account cleanup, portfolio setup, ad group hygiene, cannibalization between ad groups, or which products are not advertised.
 ---
 
 # Sponsored Ads Structure Audit
@@ -43,8 +43,10 @@ paste it into their project instructions once.
 1. **Rank findings by the spend they touch, never by count.** Forty crowded
    ad groups spending $300 between them matter less than one spending
    $9,000. A finding with no spend behind it is listed, not prioritised.
-2. **Judge structure on enabled entities only.** Pull `state='all'` so the
-   totals reconcile, then filter to `enabled` before flagging anything.
+2. **Judge structure on live entities only.** Pull `state='all'` so the
+   totals reconcile, then keep an ad or keyword only when it, its ad group
+   and its campaign are all enabled. An enabled ad in a paused campaign
+   serves nothing.
    Archived clutter is not a structural problem; recommending changes to
    paused ad groups is noise.
 3. **Never recommend restructuring something that is working just to make
@@ -53,14 +55,15 @@ paste it into their project instructions once.
 4. **Sponsored Brands has no product ads.** `get_product_ads` covers SP and
    SD only. Product-coverage checks say so rather than implying SB was
    checked.
-5. **Paginate until a pull returns fewer rows than the limit.** Targets and
+5. **Paginate until a pull returns fewer rows than the limit** — not until
+   `next_cursor` is null. Targets and
    product ads cap out on any real account. If you stop early, call every
    count a floor.
-6. **Portfolio coverage is arithmetic, not a join.** Spend outside any
-   portfolio = total campaign spend minus the sum of portfolio spend, over
-   the same window and states. State the window.
+6. **Portfolio coverage comes from `portfolio_id`.** Spend outside any
+   portfolio = spend of enabled campaigns whose `portfolio_id` is null.
+   State the window.
 7. **An unadvertised product needs sales to matter.** Only flag ASINs with
-   ordered revenue in the window and no enabled product ad — and check
+   ordered revenue in the window and no live product ad — and check
    stock before recommending ads on one.
 8. **Never mix ID namespaces.** Only Sponsored Ads IDs belong in this report.
    AMC `campaign_id`s are a different namespace and never join to these.
@@ -98,7 +101,7 @@ outward channel.
 
 ## Version
 
-`trackiq-amazon-campaign-structure-audit` v1.0.0 (2026-09-21).
+`trackiq-amazon-campaign-structure-audit` v1.1.0 (2026-09-21).
 
 If the user asks whether this skill is current, fetch
 `https://trackiq.com/skills/registry.json`, compare the `version` field for
