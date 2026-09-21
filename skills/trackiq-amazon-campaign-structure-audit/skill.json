@@ -1,0 +1,39 @@
+{
+  "name": "trackiq-amazon-campaign-structure-audit",
+  "title": "TrackIQ: Amazon Sponsored Ads Structure Audit",
+  "category": "advertising",
+  "version": "1.0.0",
+  "updated": "2026-09-21",
+  "summary": "Audits how an Amazon Sponsored Ads account is built rather than how it performed last week \u2014 ad groups crowded with unrelated products, the same product advertised in a dozen ad groups competing with itself, keywords stacked in every match type inside one ad group, spend sitting outside any portfolio, and selling products with no ad at all \u2014 ranked by the spend each problem touches, with a fix order the team can work through.",
+  "changelog": "First public release.",
+  "requires": {
+    "mcp": [
+      "trackiq"
+    ],
+    "tools": [
+      "list_marketplaces",
+      "get_campaigns",
+      "get_ad_groups",
+      "get_targets",
+      "get_product_ads",
+      "get_portfolios",
+      "get_product_performance"
+    ],
+    "filesystem": false,
+    "network": false,
+    "third_party_apis": []
+  },
+  "delivery": {
+    "methods": [
+      "in-chat",
+      "file",
+      "slack",
+      "n8n",
+      "email"
+    ],
+    "default": "in-chat",
+    "note": "in-chat always works and is the fallback. Outward sends confirm first."
+  },
+  "homepage": "https://trackiq.com/skills/trackiq-amazon-campaign-structure-audit",
+  "license": "MIT"
+}

@@ -1,0 +1,21 @@
+{
+  "name": "trackiq-amazon-campaign-structure-audit",
+  "version": "1.0.0",
+  "description": "TrackIQ: Amazon Sponsored Ads Structure Audit \u2014 an Agent Skill for Amazon sellers, built on TrackIQ MCP data.",
+  "author": {
+    "name": "TrackIQ",
+    "url": "https://trackiq.com"
+  },
+  "homepage": "https://trackiq.com/skills/trackiq-amazon-campaign-structure-audit",
+  "repository": "https://github.com/TrackIQ-HQ/trackiq-amazon-campaign-structure-audit",
+  "license": "MIT",
+  "keywords": [
+    "amazon",
+    "amazon-seller",
+    "claude-skill",
+    "agent-skills",
+    "mcp",
+    "trackiq",
+    "amazon-advertising"
+  ]
+}
